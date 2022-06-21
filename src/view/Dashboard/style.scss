@@ -3,6 +3,16 @@
   flex-direction: column;
   height: 100vh;
   justify-content: space-between;
+  .verified {
+    background-color: #fff0cb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    a{
+        text-decoration: none;
+    }
+  }
   .header {
     display: flex;
     padding: 20px 5%;

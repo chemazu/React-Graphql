@@ -28,22 +28,35 @@ export default function Dashboard({}: Props) {
   let [loginBtn, setLoginBtn] = React.useState(false);
   // create card
   let [showCreate, setShowCreate] = React.useState(false);
+  let [showVerified, setShowVerified] = React.useState(false);
 
   return (
     <div className="dashboard">
-      <div className="header">
-        <h2>Dashboard</h2>
-        <div className="username-wrapper">
-          <p
-            onClick={() => {
-              setLoginBtn(!loginBtn);
-            }}
-          >
-            {user} &#9660;
-          </p>
-          {loginBtn && <p className="login-button"> Log Out</p>}
+      <div className="upper">
+        {!showVerified && (
+          <div className="verified">
+            <p>
+              You have not verified your email address. Click <a href="/#">here</a> to resend
+              verification link.
+            </p>
+          </div>
+        )}
+
+        <div className="header">
+          <h2>Dashboard</h2>
+          <div className="username-wrapper">
+            <p
+              onClick={() => {
+                setLoginBtn(!loginBtn);
+              }}
+            >
+              {user} &#9660;
+            </p>
+            {loginBtn && <p className="login-button"> Log Out</p>}
+          </div>
         </div>
       </div>
+
       <div className="card-wrapper">
         {desArr.map((item: any, index: number) => {
           return <DashCard item={item} key={index} />;
