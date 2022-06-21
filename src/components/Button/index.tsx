@@ -1,8 +1,12 @@
 import React from "react";
 import "./style.scss";
 
-type Props = { className?: string,title: string};
+type Props = { className?: string; title: string; onClick?: () => void };
 
-export default function Button({ className,title }: Props) {
-  return <button className={className}>{title}</button>;
+export default function Button({ className, title, onClick }: Props) {
+  return (
+    <button className={className} onClick={onClick}>
+      {title}
+    </button>
+  );
 }
