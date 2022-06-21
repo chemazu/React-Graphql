@@ -1,15 +1,74 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+} from "@apollo/client";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
+const client = new ApolloClient({
+  uri: "https://api.spacex.land/graphql/",
+  cache: new InMemoryCache(),
+});
+
+// client
+//   .query({
+//     query: gql`
+//       query GetRates {
+//         rates(currency: "USD") {
+//           currency
+//         }
+//       }
+//     `
+//   })
+//   .then(result => console.log(result));
+console.log(client);
+client
+  .query({
+    query: gql`
+      query Launches {
+        launches {
+          mission_name
+          mission_id
+          rocket {
+            rocket_name
+            rocket {
+              company
+              name
+              mass {
+                kg
+              }
+            }
+          }
+          launch_site {
+            site_name
+          }
+          launch_date_local
+        }
+      }
+    `,
+  })
+  .then((res) => {
+    return res;
+  })
+  .then((result) => console.log(result));
+// .then((result) => console.log(result));
+
+
+
 root.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>
 );
 
