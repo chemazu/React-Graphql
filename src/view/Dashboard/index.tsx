@@ -23,7 +23,7 @@ export default function Dashboard({}: Props) {
       name: "Item 1",
       content:
         "    Amet minim mollit non deserunt ullamco est sit aliqua dolor doamet sint. Velit officia consequat duis enim velit mollit.Exercitation veniam consequat sunt nostrud amet.",
-    },
+    }
   ];
   let user = "name";
   // to toggle button visibility

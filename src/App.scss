@@ -7,3 +7,21 @@
     cursor: pointer;
   }
 }
+a{
+  text-decoration: none;
+}
+textarea:focus, input:focus{
+  outline: none;
+background-color: #fff;
+
+}
+
+input:valid {
+  background: lime;
+}
+.visible{
+  visibility: visible;
+}
+.hidden{
+  visibility: hidden;
+}

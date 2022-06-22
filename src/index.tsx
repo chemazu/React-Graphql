@@ -10,6 +10,7 @@ import {
   useQuery,
   gql,
 } from "@apollo/client";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -62,13 +63,13 @@ client
   .then((result) => console.log(result));
 // .then((result) => console.log(result));
 
-
-
 root.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
