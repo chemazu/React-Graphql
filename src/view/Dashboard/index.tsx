@@ -2,6 +2,8 @@ import React from "react";
 import Button from "../../components/Button";
 import "./style.scss";
 import create from "../../resources/create.svg";
+import greenCheck from "../../resources/green-check.svg";
+import caretRight from "../../resources/caret-right.svg";
 
 type Props = {};
 
@@ -29,6 +31,7 @@ export default function Dashboard({}: Props) {
   // create card
   let [showCreate, setShowCreate] = React.useState(false);
   let [showVerified, setShowVerified] = React.useState(false);
+  let [confirmVerified, setConfirmVerified] = React.useState(false);
 
   return (
     <div className="dashboard">
@@ -36,8 +39,17 @@ export default function Dashboard({}: Props) {
         {!showVerified && (
           <div className="verified">
             <p>
-              You have not verified your email address. Click <a href="/#">here</a> to resend
-              verification link.
+              You have not verified your email address. Click{" "}
+              <span
+                className="verify-link"
+                onClick={() => {
+                  setShowVerified(!showVerified);
+                  setConfirmVerified(true);
+                }}
+              >
+                here
+              </span>{" "}
+              to resend verification link.
             </p>
           </div>
         )}
@@ -45,13 +57,15 @@ export default function Dashboard({}: Props) {
         <div className="header">
           <h2>Dashboard</h2>
           <div className="username-wrapper">
-            <p
+            <p style={{display:"inline"}}
               onClick={() => {
                 setLoginBtn(!loginBtn);
               }}
+              className="hover"
             >
-              {user} &#9660;
+              {user} 
             </p>
+            <span style={{fontSize:"80%" ,padding:"0 5px"}}>&#9660;</span>
             {loginBtn && <p className="login-button"> Log Out</p>}
           </div>
         </div>
@@ -91,6 +105,23 @@ export default function Dashboard({}: Props) {
                 }}
               />
               <Button className="sec" title="Create Event" />
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmVerified && (
+        <div className="confirm-verified-wrapper">
+          <div className="confirm-verified">
+            <img src={greenCheck} alt="green check" />
+            <p className="first">Your email address has been verified.</p>
+            <div
+              className="second-container"
+              onClick={() => {
+                setConfirmVerified(false);
+              }}
+            >
+              <p className="second">Go to Dashboard</p>
+              <img src={caretRight} alt="caret-right" />
             </div>
           </div>
         </div>

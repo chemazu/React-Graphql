@@ -9,8 +9,11 @@
     align-items: center;
     justify-content: center;
     padding: 15px;
-    a{
-        text-decoration: none;
+    span {
+      color: #004cbd;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
   .header {
@@ -30,7 +33,6 @@
       }
     }
   }
-
   .card-wrapper {
     display: flex;
     justify-content: space-between;
@@ -84,17 +86,7 @@
       }
     }
   }
-  .bottom-bar {
-    padding: 25px 5%;
-    display: flex;
-    justify-content: flex-end;
-    img {
-      width: 40px;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-  }
+
   .create-wrapper {
     position: absolute;
     background-color: rgba(36, 36, 36, 0.312);
@@ -132,6 +124,61 @@
         justify-content: flex-end;
         display: flex;
         padding: 30px;
+      }
+    }
+  }
+  .confirm-verified-wrapper {
+    position: absolute;
+    background-color: #e5e5e5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .confirm-verified {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      padding: 5% 10%;
+      height: 25%;
+      background: #fff;
+      .first {
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 24px;
+      }
+      div {
+        display: flex;
+        align-items: center;
+        .second {
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 20px;
+          color: #004cbd;
+          padding-right: 10px;
+        }
+        img {
+          height: 12px;
+        }
+        &:hover{
+            cursor: pointer;
+        }
+      }
+    }
+  }
+  .bottom-bar {
+    padding: 25px 5%;
+    display: flex;
+    justify-content: flex-end;
+    img {
+      width: 40px;
+      &:hover {
+        cursor: pointer;
       }
     }
   }
