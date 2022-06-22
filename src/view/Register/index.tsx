@@ -9,12 +9,14 @@ export default function Register() {
   let [email, setEmail] = React.useState("");
   let [password, setPassword] = React.useState("");
   let [showPassword, setShowPassword] = React.useState(false);
-  let [regexChecker, setRegexChecker] = React.useState({});
+  let regexFinal =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])(?=.*[\d]).+$/;
 
   let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let regexUpper = /^(?=.*[A-Z]).+$/;
   let regexNum = /\d/;
   let regexSym = /^(?=.*[-+_!@#$%^&*., ?]).+$/;
+  // console.log(regexFinal.test("Ratface_!2"))
   // let handleRegex = () => {
   //   let regexUpper = /^(?=.*[A-Z]).+$/;
   //   let regexNum = /\d/;
@@ -161,24 +163,44 @@ export default function Register() {
             <p>&nbsp;</p>
           </div>
           <div className="form-item">
-            {regexEmail.test(email) && (
+            {/* {regexEmail.test(email) && regexFinal.test(password) && (
               <Button
-                title="Log in"
+                title="Register"
                 className="sec"
                 onClick={(e: any) => {
                   handleSubmit(e);
                 }}
               />
             )}
-            {!regexEmail.test(email) && (
+            {(!regexEmail.test(email) || regexFinal.test(password)) && (
               <Button
-                title="Log in"
+                title="Register"
+                className="disabled"
+                onClick={(e: any) => {
+                  e.preventDefault();
+                }}
+              />
+            )} */}
+            {(!regexEmail.test(email) || !regexFinal.test(password)|| password.length < 8) && (
+              <Button
+                title="Register"
                 className="disabled"
                 onClick={(e: any) => {
                   e.preventDefault();
                 }}
               />
             )}
+            {regexEmail.test(email) &&
+              regexFinal.test(password) &&
+              password.length > 7 && (
+                <Button
+                  title="Register"
+                  className="sec"
+                  onClick={(e: any) => {
+                    handleSubmit(e);
+                  }}
+                />
+              )}
 
             <p>&nbsp;</p>
           </div>
