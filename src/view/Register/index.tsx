@@ -39,6 +39,7 @@ export default function Register() {
         lastName: lName,
       },
     }).then((res: any) => {
+      localStorage.setItem("wazoKey", "");
       localStorage.setItem("wazoKey", res.data.signup.token);
       if (localStorage.getItem("wazoKey")) {
         navigate("/dashboard");

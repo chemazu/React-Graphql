@@ -6,11 +6,14 @@ import greenCheck from "../../resources/green-check.svg";
 import caretRight from "../../resources/caret-right.svg";
 import { GETME, GETITEMS, VERIFYME } from "../../graphql/schema";
 import { useMutation, useQuery } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 export default function Dashboard({}: Props) {
+  let navigate = useNavigate();
   const { loading, error, data } = useQuery(GETME);
+  console.log(data);
   const {
     loading: itemsLoading,
     error: itemsError,
@@ -40,7 +43,7 @@ export default function Dashboard({}: Props) {
   return (
     <div className="dashboard">
       <div className="upper">
-        {!loading && !data.getMe.email_verified_at && (
+        {!loading && data.getMe.email_verified_at == null && (
           <div className="verified">
             <p>
               You have not verified your email address. Click{" "}
@@ -125,6 +128,7 @@ export default function Dashboard({}: Props) {
               className="second-container"
               onClick={() => {
                 setConfirmVerified(false);
+                window.location.reload();
               }}
             >
               <p className="second">Go to Dashboard</p>
