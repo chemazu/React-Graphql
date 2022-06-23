@@ -54,21 +54,20 @@ function App() {
   //   console.log(await signup());
   // };
   let handleSignup = () => {
-    
-    signup().then(res=>{console.log(res)})
-    if (error)(
-      console.log("error")
-    )
+    signup().then((res) => {
+      console.log(res);
+    });
+    if (error) console.log("error");
     // console.log(data);
   };
   return (
-    <div className="App">
+    <>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/register" element={<Register signup={handleSignup} />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
