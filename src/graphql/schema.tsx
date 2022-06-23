@@ -45,3 +45,11 @@ export const LOGIN = gql`
     }
   }
 `;
+export const GETME = gql`
+  query GETME {
+    getMe {
+      uuid
+      _id
+    }
+  }
+`;

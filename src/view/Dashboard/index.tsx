@@ -4,10 +4,17 @@ import "./style.scss";
 import create from "../../resources/create.svg";
 import greenCheck from "../../resources/green-check.svg";
 import caretRight from "../../resources/caret-right.svg";
+import { GETME } from "../../graphql/schema";
+import { useQuery } from "@apollo/client";
 
 type Props = {};
 
 export default function Dashboard({}: Props) {
+  const { loading, error, data } = useQuery(GETME, {
+    context: {
+      headers: { Authorization: `Bearer ${localStorage.getItem("wazoKey")}` },
+    },
+  });
   let desArr = [
     {
       name: "Item 1",
@@ -23,7 +30,7 @@ export default function Dashboard({}: Props) {
       name: "Item 1",
       content:
         "    Amet minim mollit non deserunt ullamco est sit aliqua dolor doamet sint. Velit officia consequat duis enim velit mollit.Exercitation veniam consequat sunt nostrud amet.",
-    }
+    },
   ];
   let user = "name";
   // to toggle button visibility
@@ -57,15 +64,16 @@ export default function Dashboard({}: Props) {
         <div className="header">
           <h2>Dashboard</h2>
           <div className="username-wrapper">
-            <p style={{display:"inline"}}
+            <p
+              style={{ display: "inline" }}
               onClick={() => {
                 setLoginBtn(!loginBtn);
               }}
               className="hover"
             >
-              {user} 
+              {user}
             </p>
-            <span style={{fontSize:"80%" ,padding:"0 5px"}}>&#9660;</span>
+            <span style={{ fontSize: "80%", padding: "0 5px" }}>&#9660;</span>
             {loginBtn && <p className="login-button"> Log Out</p>}
           </div>
         </div>
