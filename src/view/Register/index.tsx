@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import { useMutation } from "@apollo/client";
 import "./style.scss";
-
 export default function Register() {
   let [fName, setFName] = React.useState("");
   let [lName, setLName] = React.useState("");
@@ -18,39 +17,9 @@ export default function Register() {
   let regexUpper = /^(?=.*[A-Z]).+$/;
   let regexNum = /\d/;
   let regexSym = /^(?=.*[-+_!@#$%^&*., ?]).+$/;
-  // const SIGNUP = gql`
-  //   mutation SIGNUP(
-  //     $firstName: String!
-  //     $lastName: String!
-  //     $email: String!
-  //     $password: String!
-  //   ) {
-  //     signup(
-  //       first_name: $firstName
-  //       last_name: $lastName
-  //       email: $email
-  //       password: $password
-  //     ) {
-  //       token
-  //       user {
-  //         email_verification_token
-  //         email_verified_at
-  //         email
-  //         last_name
-  //         first_name
-  //         uuid
-  //         _id
-  //         created_at
-  //         updated_at
-  //       }
-  //     }
-  //   }
-  // `;
-
   const [signup, { data, loading, error }] = useMutation(SIGNUP);
   let handleSubmit = (e: any) => {
-    e.preentDefault();
-    console.log(fName, lName, email, password);
+    e.preventDefault();
     signup({
       variables: {
         password: password,
@@ -64,12 +33,10 @@ export default function Register() {
         navigate("/dashboard");
       }
     });
-    console.log(error, data, loading);
-    if (!loading) {
-      console.log(data);
-      console.log(data);
-      console.log("redirect");
-    }
+    setFName("");
+    setLName("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
