@@ -5,24 +5,43 @@ type Props = {};
 
 export default function Dashboard({}: Props) {
   const Launches = gql`
-    query Launches {
-      launches {
-        mission_name
-        mission_id
-        rocket {
-          rocket_name
-          rocket {
-            company
-            name
-            mass {
-              kg
-            }
-          }
+    # query Launches {
+    #   launches {
+    #     mission_name
+    #     mission_id
+    #     rocket {
+    #       rocket_name
+    #       rocket {
+    #         company
+    #         name
+    #         mass {
+    #           kg
+    #         }
+    #       }
+    #     }
+    #     launch_site {
+    #       site_name
+    #     }
+    #     launch_date_local
+    #   }
+    # }
+    mutation Mutation(
+      $firstName: String!
+      $lastName: String!
+      $email: String!
+      $password: String!
+    ) {
+      signup(
+        first_name: $firstName
+        last_name: $lastName
+        email: $email
+        password: $password
+      ) {
+        user {
+          first_name
+          last_name
+          email
         }
-        launch_site {
-          site_name
-        }
-        launch_date_local
       }
     }
   `;

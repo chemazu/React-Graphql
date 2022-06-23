@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Button from "../../components/Button";
 import "./style.scss";
 
-export default function Register() {
+export default function Register({signup}:{signup:any}) {
   let [fName, setFName] = React.useState("");
   let [lName, setLName] = React.useState("");
   let [email, setEmail] = React.useState("");
@@ -47,6 +47,7 @@ export default function Register() {
           <p>
             Already have an account? <Link to="/login">Log in</Link>
           </p>
+          <p onClick={()=>{signup()}}>signup</p>
         </div>
 
         <form>
