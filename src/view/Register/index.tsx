@@ -3,13 +3,24 @@ import { SIGNUP } from "../../graphql/schema";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import { useMutation } from "@apollo/client";
+import { Context } from "../../context/Context";
+import { ContextType } from "../../@types/context.d";
 import "./style.scss";
+
 export default function Register() {
-  let [fName, setFName] = React.useState("");
-  let [lName, setLName] = React.useState("");
-  let [email, setEmail] = React.useState("");
-  let [password, setPassword] = React.useState("");
-  let [showPassword, setShowPassword] = React.useState(false);
+  const { register } = React.useContext(Context) as ContextType;
+  let {
+    fName,
+    setFName,
+    lName,
+    setLName,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    showPassword,
+    setShowPassword,
+  } = register;
   let navigate = useNavigate();
   let regexFinal =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])(?=.*[\d]).+$/;
@@ -164,7 +175,6 @@ export default function Register() {
                   }}
                 />
               )}
-
             <p>&nbsp;</p>
           </div>
         </form>

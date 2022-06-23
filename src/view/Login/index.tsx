@@ -1,16 +1,42 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { useMutation } from "@apollo/client";
+import { Context } from "../../context/Context";
+import { ContextType } from "../../@types/context.d";
 import "./style.scss";
-
+import { LOGIN } from "../../graphql/schema";
 export default function Login() {
-  let [email, setEmail] = React.useState("");
-  let [password, setPassword] = React.useState("");
-  let [showPassword, setShowPassword] = React.useState(false);
+  let navigate = useNavigate();
+  const [login, { data, loading, error }] = useMutation(LOGIN);
+  const { login: loginData } = React.useContext(Context) as ContextType;
+  let {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    showPassword,
+    setShowPassword,
+  } = loginData;
   let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(email, password);
+    login({
+      variables: {
+        password: password,
+        email: email,
+      },
+    })
+      .then((res: any) => {
+        localStorage.setItem("wazoKey", res.data.login.token);
+        if (localStorage.getItem("wazoKey")) {
+          navigate("/dashboard");
+        }
+      })
+      .then(() => {
+        setEmail("");
+        setPassword("");
+      });
   };
   return (
     <div className="login">

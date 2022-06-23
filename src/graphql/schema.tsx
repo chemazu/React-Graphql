@@ -27,3 +27,21 @@ export const SIGNUP = gql`
     }
   }
 `;
+export const LOGIN = gql`
+  mutation LOGIN($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      user {
+        _id
+        uuid
+        first_name
+        last_name
+        email
+        email_verified_at
+        email_verification_token
+        created_at
+        updated_at
+      }
+      token
+    }
+  }
+`;
