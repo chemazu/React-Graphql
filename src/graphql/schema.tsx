@@ -50,6 +50,33 @@ export const GETME = gql`
     getMe {
       uuid
       _id
+      first_name
+      last_name
+      email_verification_token
+      email_verified_at
+    }
+  }
+`;
+export const GETITEMS = gql`
+  query GETITEMS {
+    getItems {
+      items {
+        name
+        description
+        _id
+      }
+      pagination {
+        currentPage
+        maxPages
+      }
+    }
+  }
+`;
+export const VERIFYME = gql`
+  mutation verifyme($token: String!) {
+    verifyMe(token: $token) {
+      email_verified_at
+      email_verification_token
     }
   }
 `;

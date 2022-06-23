@@ -7,21 +7,21 @@
     cursor: pointer;
   }
 }
-a{
+a {
   text-decoration: none;
 }
-textarea:focus, input:focus{
+textarea:focus,
+input:focus {
   outline: none;
-background-color: #fff;
-
+  background-color: #fff;
 }
 
 input:valid {
-  background: lime;
+  background: #fff;
 }
-.visible{
+.visible {
   visibility: visible;
 }
-.hidden{
+.hidden {
   visibility: hidden;
 }

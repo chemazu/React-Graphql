@@ -4,38 +4,35 @@ import "./style.scss";
 import create from "../../resources/create.svg";
 import greenCheck from "../../resources/green-check.svg";
 import caretRight from "../../resources/caret-right.svg";
-import { GETME } from "../../graphql/schema";
-import { useQuery } from "@apollo/client";
+import { GETME, GETITEMS, VERIFYME } from "../../graphql/schema";
+import { useMutation, useQuery } from "@apollo/client";
 
 type Props = {};
 
 export default function Dashboard({}: Props) {
-  const { loading, error, data } = useQuery(GETME, {
-    context: {
-      headers: { Authorization: `Bearer ${localStorage.getItem("wazoKey")}` },
-    },
-  });
-  let desArr = [
-    {
-      name: "Item 1",
-      content:
-        "    Amet minim mollit non deserunt ullamco est sit aliqua dolor doamet sint. Velit officia consequat duis enim velit mollit.Exercitation veniam consequat sunt nostrud amet.",
-    },
-    {
-      name: "Item 1",
-      content:
-        "    Amet minim mollit non deserunt ullamco est sit aliqua dolor doamet sint. Velit officia consequat duis enim velit mollit.Exercitation veniam consequat sunt nostrud amet.",
-    },
-    {
-      name: "Item 1",
-      content:
-        "    Amet minim mollit non deserunt ullamco est sit aliqua dolor doamet sint. Velit officia consequat duis enim velit mollit.Exercitation veniam consequat sunt nostrud amet.",
-    },
-  ];
-  let user = "name";
-  // to toggle button visibility
+  const { loading, error, data } = useQuery(GETME);
+  const {
+    loading: itemsLoading,
+    error: itemsError,
+    data: itemsData,
+  } = useQuery(GETITEMS);
+  const [
+    verifyme,
+    { loading: verifyLoading, error: verifyError, data: verifyData },
+  ] = useMutation(VERIFYME);
+  let handleVerification = () => {
+    setConfirmVerified(true);
+    verifyme({ variables: { token: data.getMe.email_verification_token } });
+  };
+  // const [
+  //   verifyme,
+  //   { loading: verifyLoading, error: verifyError, data: verifyData },
+  // ] = useMutation(GETITEMS);
+  // let handleVerification = (e: any) => {
+  //   e.preventDefault();
+  //   // verifyme({ variables: { token: data.getMe.email_verification_token } });
+  // };
   let [loginBtn, setLoginBtn] = React.useState(false);
-  // create card
   let [showCreate, setShowCreate] = React.useState(false);
   let [showVerified, setShowVerified] = React.useState(false);
   let [confirmVerified, setConfirmVerified] = React.useState(false);
@@ -43,15 +40,14 @@ export default function Dashboard({}: Props) {
   return (
     <div className="dashboard">
       <div className="upper">
-        {!showVerified && (
+        {!loading && !data.getMe.email_verified_at && (
           <div className="verified">
             <p>
               You have not verified your email address. Click{" "}
               <span
                 className="verify-link"
                 onClick={() => {
-                  setShowVerified(!showVerified);
-                  setConfirmVerified(true);
+                  handleVerification();
                 }}
               >
                 here
@@ -71,7 +67,8 @@ export default function Dashboard({}: Props) {
               }}
               className="hover"
             >
-              {user}
+              {loading && "User"}
+              {!loading && `${data.getMe.first_name}  ${data.getMe.last_name}`}
             </p>
             <span style={{ fontSize: "80%", padding: "0 5px" }}>&#9660;</span>
             {loginBtn && <p className="login-button"> Log Out</p>}
@@ -80,9 +77,11 @@ export default function Dashboard({}: Props) {
       </div>
 
       <div className="card-wrapper">
-        {desArr.map((item: any, index: number) => {
-          return <DashCard item={item} key={index} />;
-        })}
+        {itemsLoading && <p>Loading...</p>}
+        {!itemsLoading &&
+          itemsData.getItems.items.map((item: any, index: number) => {
+            return <DashCard item={item} key={index} />;
+          })}
       </div>
       {showCreate && (
         <div className="create-wrapper">
