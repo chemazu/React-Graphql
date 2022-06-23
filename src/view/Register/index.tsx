@@ -1,42 +1,75 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { SIGNUP } from "../../graphql/schema";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { useMutation } from "@apollo/client";
 import "./style.scss";
 
-export default function Register({signup}:{signup:any}) {
+export default function Register() {
   let [fName, setFName] = React.useState("");
   let [lName, setLName] = React.useState("");
   let [email, setEmail] = React.useState("");
   let [password, setPassword] = React.useState("");
   let [showPassword, setShowPassword] = React.useState(false);
+  let navigate = useNavigate();
   let regexFinal =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])(?=.*[\d]).+$/;
-
   let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let regexUpper = /^(?=.*[A-Z]).+$/;
   let regexNum = /\d/;
   let regexSym = /^(?=.*[-+_!@#$%^&*., ?]).+$/;
-  // console.log(regexFinal.test("Ratface_!2"))
-  // let handleRegex = () => {
-  //   let regexUpper = /^(?=.*[A-Z]).+$/;
-  //   let regexNum = /\d/;
-  //   let regexSym = /^(?=.*[-+_!@#$%^&*., ?]).+$/;
+  // const SIGNUP = gql`
+  //   mutation SIGNUP(
+  //     $firstName: String!
+  //     $lastName: String!
+  //     $email: String!
+  //     $password: String!
+  //   ) {
+  //     signup(
+  //       first_name: $firstName
+  //       last_name: $lastName
+  //       email: $email
+  //       password: $password
+  //     ) {
+  //       token
+  //       user {
+  //         email_verification_token
+  //         email_verified_at
+  //         email
+  //         last_name
+  //         first_name
+  //         uuid
+  //         _id
+  //         created_at
+  //         updated_at
+  //       }
+  //     }
+  //   }
+  // `;
 
-  //   if (regexUpper.test(password)) {
-  //     setRegexChecker({ ...regexChecker, upper: true });
-  //   }
-  //   if (regexSym.test(password)) {
-  //     setRegexChecker({ ...regexChecker, sym: true });
-  //   }
-  //   if (regexNum.test(password)) {
-  //     setRegexChecker({ ...regexChecker, num: true });
-  //   }
-  //   //  return regexChecker;
-  // };
-  // let pattern = new RegExp(regexUppercase);
+  const [signup, { data, loading, error }] = useMutation(SIGNUP);
   let handleSubmit = (e: any) => {
-    e.preventDefault();
+    e.preentDefault();
     console.log(fName, lName, email, password);
+    signup({
+      variables: {
+        password: password,
+        email: email,
+        firstName: fName,
+        lastName: lName,
+      },
+    }).then((res: any) => {
+      localStorage.setItem("wazoKey", res.data.signup.token);
+      if (localStorage.getItem("wazoKey")) {
+        navigate("/dashboard");
+      }
+    });
+    console.log(error, data, loading);
+    if (!loading) {
+      console.log(data);
+      console.log(data);
+      console.log("redirect");
+    }
   };
 
   return (
@@ -47,7 +80,6 @@ export default function Register({signup}:{signup:any}) {
           <p>
             Already have an account? <Link to="/login">Log in</Link>
           </p>
-          <p onClick={()=>{signup()}}>signup</p>
         </div>
 
         <form>
@@ -119,70 +151,31 @@ export default function Register({signup}:{signup:any}) {
             {password.length > 0 && (
               <div className="password-validation">
                 <ul>
-                  <>
-                    {regexUpper.test(password) && (
-                      <li className="check">
-                        Contains at least one uppercase letter
-                      </li>
-                    )}
-                    {!regexUpper.test(password) && (
-                      <li>Contains at least one uppercase letter</li>
-                    )}
-                  </>
-                  <>
-                    {password.length > 7 && (
-                      <li className="check">Contains eight characters</li>
-                    )}
-                    {password.length < 8 && <li>Contains eight characters</li>}
-                  </>
-                  <>
-                    {regexNum.test(password) && (
-                      <li className="check">Contains at least one number</li>
-                    )}
-                    {!regexNum.test(password) && (
-                      <li>Contains at least one number</li>
-                    )}
-                  </>
-                  <>
-                    {regexSym.test(password) && (
-                      <li className="check">Contains at least one symbol</li>
-                    )}
-                    {!regexSym.test(password) && (
-                      <li>Contains at least one symbol</li>
-                    )}
-                  </>
+                  <li className={`${regexUpper.test(password) ? "check" : ""}`}>
+                    Contains at least one uppercase letter
+                  </li>
+                  <li className={`${password.length > 7 ? "check" : ""}`}>
+                    Contains eight characters
+                  </li>
+                  <li className={`${regexNum.test(password) ? "check" : ""}`}>
+                    Contains at least one number
+                  </li>
+                  <li className={`${regexSym.test(password) ? "check" : ""}`}>
+                    Contains at least one symbol
+                  </li>
                 </ul>
-                {/* {regexNum.test(password) && <p className="check">dfd</p>}
-                {!regexNum.test(password) && <p>dfd</p>}
-
-                <p className="check">Contains at least one uppercase letter</p>
-                <p>Contains eight characters</p>
-                <p>Contains at least one number</p>
-                <p>Contains at least one symbol</p> */}
               </div>
             )}
             <p>&nbsp;</p>
           </div>
           <div className="form-item">
-            {/* {regexEmail.test(email) && regexFinal.test(password) && (
-              <Button
-                title="Register"
-                className="sec"
-                onClick={(e: any) => {
-                  handleSubmit(e);
-                }}
-              />
-            )}
-            {(!regexEmail.test(email) || regexFinal.test(password)) && (
-              <Button
-                title="Register"
-                className="disabled"
-                onClick={(e: any) => {
-                  e.preventDefault();
-                }}
-              />
-            )} */}
-            {(!regexEmail.test(email) || !regexFinal.test(password)|| password.length < 8) && (
+            {loading && <p>Loading.....</p>}
+            {error && <p style={{ color: "red" }}>{error.message}</p>}
+            {(!regexEmail.test(email) ||
+              !regexFinal.test(password) ||
+              password.length < 8 ||
+              fName.length < 1 ||
+              lName.length < 1) && (
               <Button
                 title="Register"
                 className="disabled"
@@ -193,7 +186,9 @@ export default function Register({signup}:{signup:any}) {
             )}
             {regexEmail.test(email) &&
               regexFinal.test(password) &&
-              password.length > 7 && (
+              password.length > 7 &&
+              fName.length > 1 &&
+              lName.length > 1 && (
                 <Button
                   title="Register"
                   className="sec"

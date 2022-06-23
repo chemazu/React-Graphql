@@ -4,18 +4,10 @@ import "./App.scss";
 import Dashboard from "./view/Dashboard";
 import Login from "./view/Login";
 import Register from "./view/Register";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql,
-  useMutation,
-} from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
 function App() {
   const SIGNUP = gql`
-    # Increments a back-end counter and gets its resulting value
     mutation SIGNUP(
       $firstName: String!
       $lastName: String!
@@ -61,13 +53,13 @@ function App() {
     // console.log(data);
   };
   return (
-    <>
+    <div className="App">
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/register" element={<Register signup={handleSignup} />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
