@@ -1,44 +1,76 @@
 import React from "react";
-import Button from "../../components/Button";
 import "./style.scss";
+import Button from "../../components/Button";
 import create from "../../resources/create.svg";
 import greenCheck from "../../resources/green-check.svg";
 import caretRight from "../../resources/caret-right.svg";
-import { GETME, GETITEMS, VERIFYME } from "../../graphql/schema";
+import {
+  GETME,
+  GETITEMS,
+  VERIFYME,
+  CREATEITEM,
+  DELETEITEM,
+  UPDATEITEM,
+} from "../../graphql/schema";
 import { useMutation, useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
-type Props = {};
-
-export default function Dashboard({}: Props) {
-  let navigate = useNavigate();
-  const { loading, error, data } = useQuery(GETME);
-  console.log(data);
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const { loading, data } = useQuery(GETME);
   const {
     loading: itemsLoading,
-    error: itemsError,
     data: itemsData,
   } = useQuery(GETITEMS);
-  const [
-    verifyme,
-    { loading: verifyLoading, error: verifyError, data: verifyData },
-  ] = useMutation(VERIFYME);
+  const [createitem] = useMutation(CREATEITEM);
+  const [deleteItem] = useMutation(DELETEITEM);
+  const [updateItem] = useMutation(UPDATEITEM);
+  const [verifyme] = useMutation(VERIFYME);
+  let [loginBtn, setLoginBtn] = React.useState(false);
+  let [note, setNote] = React.useState({ noteName: "", noteDescription: "" });
+  let [showCreate, setShowCreate] = React.useState(false);
+  let [showEdit, setShowEdit] = React.useState({ status: false, uuid: "" });
+  let [confirmVerified, setConfirmVerified] = React.useState(false);
+
   let handleVerification = () => {
     setConfirmVerified(true);
     verifyme({ variables: { token: data.getMe.email_verification_token } });
   };
-  // const [
-  //   verifyme,
-  //   { loading: verifyLoading, error: verifyError, data: verifyData },
-  // ] = useMutation(GETITEMS);
-  // let handleVerification = (e: any) => {
-  //   e.preventDefault();
-  //   // verifyme({ variables: { token: data.getMe.email_verification_token } });
-  // };
-  let [loginBtn, setLoginBtn] = React.useState(false);
-  let [showCreate, setShowCreate] = React.useState(false);
-  let [showVerified, setShowVerified] = React.useState(false);
-  let [confirmVerified, setConfirmVerified] = React.useState(false);
+  let handleCreate = () => {
+    createitem({
+      variables: { name: note.noteName, description: note.noteDescription },
+    }).then((res: any) => {
+      window.location.reload();
+    });
+    setShowCreate(false);
+  };
+  let handleDelete = (uuid: any) => {
+    deleteItem({
+      variables: {
+        uuid,
+      },
+    }).then(() => {
+      window.location.reload();
+    });
+  };
+  let handleUpdate = () => {
+    console.log(note.noteName, note.noteDescription, showEdit.uuid);
+    updateItem({
+      variables: {
+        name: note.noteName,
+        description: note.noteDescription,
+        uuid: showEdit.uuid,
+      },
+    }).then((res: any) => {
+      // console.log(res)
+      window.location.reload();
+    });
+    setShowCreate(!showCreate);
+  };
+  let handleLogOut=()=>{
+    localStorage.setItem("wazoKey","")
+    navigate('/login')
+  }
 
   return (
     <div className="dashboard">
@@ -74,7 +106,7 @@ export default function Dashboard({}: Props) {
               {!loading && `${data.getMe.first_name}  ${data.getMe.last_name}`}
             </p>
             <span style={{ fontSize: "80%", padding: "0 5px" }}>&#9660;</span>
-            {loginBtn && <p className="login-button"> Log Out</p>}
+            {loginBtn && <p className="logout-button hover" onClick={handleLogOut}> Log Out</p>}
           </div>
         </div>
       </div>
@@ -83,16 +115,30 @@ export default function Dashboard({}: Props) {
         {itemsLoading && <p>Loading...</p>}
         {!itemsLoading &&
           itemsData.getItems.items.map((item: any, index: number) => {
-            return <DashCard item={item} key={index} />;
+            return (
+              <DashCard
+                item={item}
+                key={index}
+                action={{ handleDelete }}
+                show={{ showCreate, setShowCreate, showEdit, setShowEdit }}
+              />
+            );
           })}
       </div>
       {showCreate && (
         <div className="create-wrapper">
           <div className="create-card">
-            <p className="heading">Create Item</p>
+            {!showEdit.status && <p className="heading">Create Item</p>}
+            {showEdit.status && <p className="heading">Edit Item</p>}
+
             <div className="card-item">
               <p>Name</p>
-              <input placeholder="Input item name here" />
+              <input
+                placeholder="Input item name here"
+                onChange={(e) => {
+                  setNote({ ...note, noteName: e.target.value });
+                }}
+              />
             </div>
             <div className="card-item">
               <p>Add Note</p>
@@ -104,6 +150,10 @@ export default function Dashboard({}: Props) {
                 rows={5}
                 cols={50}
                 placeholder="Type Here"
+                value={note.noteDescription}
+                onChange={(e) => {
+                  setNote({ ...note, noteDescription: e.target.value });
+                }}
               ></textarea>
             </div>
             <div className="button-wrapper">
@@ -111,10 +161,27 @@ export default function Dashboard({}: Props) {
                 className="pry"
                 title="Cancel"
                 onClick={() => {
-                  setShowCreate(!showCreate);
+                  setShowCreate(false);
                 }}
               />
-              <Button className="sec" title="Create Event" />
+              {!showEdit.status && (
+                <Button
+                  className="sec"
+                  title="Create Event"
+                  onClick={() => {
+                    handleCreate();
+                  }}
+                />
+              )}
+              {showEdit.status && (
+                <Button
+                  className="sec"
+                  title="Edit Event"
+                  onClick={() => {
+                    handleUpdate();
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -149,8 +216,18 @@ export default function Dashboard({}: Props) {
     </div>
   );
 }
-const DashCard = ({ item }: { item: { name: string; content: string } }) => {
-  let { name, content } = item;
+const DashCard = ({
+  item,
+  action,
+  show,
+}: {
+  item: { name: string; description: string; uuid: any };
+  action: any;
+  show: any;
+}) => {
+  let { name, description, uuid } = item;
+  let { handleDelete } = action;
+  let { showCreate, setShowCreate, setShowEdit } = show;
   return (
     <div className="dash-card">
       <div className="head">
@@ -159,11 +236,24 @@ const DashCard = ({ item }: { item: { name: string; content: string } }) => {
       </div>
       <div className="content">
         <p className="one">Description</p>
-        <p className="two">{content}</p>
+        <p className="two">{description}</p>
       </div>
       <div className="button-wrapper">
-        <Button className="pry" title="Edit" />
-        <Button className="sec" title="Delete" />
+        <Button
+          className="pry"
+          title="Edit"
+          onClick={() => {
+            setShowCreate(!showCreate);
+            setShowEdit({ uuid: uuid, status: true });
+          }}
+        />
+        <Button
+          className="sec"
+          title="Delete"
+          onClick={() => {
+            handleDelete(uuid);
+          }}
+        />
       </div>
     </div>
   );

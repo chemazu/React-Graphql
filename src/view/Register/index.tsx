@@ -24,11 +24,12 @@ export default function Register() {
   let navigate = useNavigate();
   let regexFinal =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*., ?])(?=.*[\d]).+$/;
-  let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  let regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+  // let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   let regexUpper = /^(?=.*[A-Z]).+$/;
   let regexNum = /\d/;
   let regexSym = /^(?=.*[-+_!@#$%^&*., ?]).+$/;
-  const [signup, { data, loading, error }] = useMutation(SIGNUP);
+  const [signup, {  loading, error }] = useMutation(SIGNUP);
   let handleSubmit = (e: any) => {
     e.preventDefault();
     signup({
@@ -176,7 +177,6 @@ export default function Register() {
                   }}
                 />
               )}
-            <p>&nbsp;</p>
           </div>
         </form>
       </div>

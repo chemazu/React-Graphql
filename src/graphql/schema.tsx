@@ -64,6 +64,7 @@ export const GETITEMS = gql`
         name
         description
         _id
+        uuid
       }
       pagination {
         currentPage
@@ -80,3 +81,26 @@ export const VERIFYME = gql`
     }
   }
 `;
+export const CREATEITEM = gql`
+  mutation createItem($name: String!, $description: String) {
+    createItem(name: $name, description: $description) {
+      _id
+      created_at
+    }
+  }
+`;
+
+export const DELETEITEM = gql`
+  mutation deleteItem($uuid: ID!) {
+    deleteItem(uuid: $uuid) {
+      _id
+      name
+    }
+  }
+`;
+export const UPDATEITEM =gql`mutation updateItem($uuid: ID!, $name: String, $description: String) {
+  updateItem(uuid: $uuid, name: $name, description: $description) {
+    _id
+    name
+  }
+}`

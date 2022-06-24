@@ -8,7 +8,7 @@ import "./style.scss";
 import { LOGIN } from "../../graphql/schema";
 export default function Login() {
   let navigate = useNavigate();
-  const [login, { data, loading, error }] = useMutation(LOGIN);
+  const [login] = useMutation(LOGIN);
   const { login: loginData } = React.useContext(Context) as ContextType;
   let {
     email,
@@ -18,7 +18,9 @@ export default function Login() {
     showPassword,
     setShowPassword,
   } = loginData;
-  let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  let regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+  // let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
   let handleSubmit = (e: any) => {
     e.preventDefault();
     login({

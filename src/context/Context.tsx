@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import { ContextType } from "../@types/context.d";
 
 export const Context = React.createContext<ContextType | null>(null);

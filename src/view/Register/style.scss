@@ -30,7 +30,7 @@
         grid-gap: 20px;
       }
       .form-item {
-        padding-top: 20px;
+        padding-top: 10px;
         width: 100%;
         // padding-bottom: 10px;
         p {
@@ -39,7 +39,7 @@
         input {
           border: 1px solid #efeff0;
           border-radius: 4px;
-          padding: 10px;
+          padding: 7.5px;
           width: calc(100% - 20px);
           background-color: #fff;
           color: #cacaca;
@@ -70,7 +70,7 @@
         }
         button {
           width: 100%;
-          height: 40px;
+          height: 35px;
         }
       }
       .password-validation {
@@ -78,7 +78,7 @@
           padding: 0 3%;
         }
         li {
-          padding: 7.5px 0;
+          padding: 5px 0;
           font-size: 80%;
         }
         .check {
