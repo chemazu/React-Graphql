@@ -14,23 +14,30 @@ import {
 } from "../../graphql/schema";
 import { useMutation, useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
+import { Context } from "../../context/Context";
+import { ContextType } from "../../@types/context.d";
 
 export default function Dashboard() {
+  const { dashboard } = React.useContext(Context) as ContextType;
+  let {
+    loginBtn,
+    setLoginBtn,
+    note,
+    setNote,
+    showCreate,
+    setShowCreate,
+    showEdit,
+    setShowEdit,
+    confirmVerified,
+    setConfirmVerified,
+  } = dashboard;
   const navigate = useNavigate();
   const { loading, data } = useQuery(GETME);
-  const {
-    loading: itemsLoading,
-    data: itemsData,
-  } = useQuery(GETITEMS);
+  const { loading: itemsLoading, data: itemsData } = useQuery(GETITEMS);
   const [createitem] = useMutation(CREATEITEM);
   const [deleteItem] = useMutation(DELETEITEM);
   const [updateItem] = useMutation(UPDATEITEM);
   const [verifyme] = useMutation(VERIFYME);
-  let [loginBtn, setLoginBtn] = React.useState(false);
-  let [note, setNote] = React.useState({ noteName: "", noteDescription: "" });
-  let [showCreate, setShowCreate] = React.useState(false);
-  let [showEdit, setShowEdit] = React.useState({ status: false, uuid: "" });
-  let [confirmVerified, setConfirmVerified] = React.useState(false);
 
   let handleVerification = () => {
     setConfirmVerified(true);
@@ -66,11 +73,13 @@ export default function Dashboard() {
       window.location.reload();
     });
     setShowCreate(!showCreate);
+    setShowEdit({ ...showEdit, status: false });
+
   };
-  let handleLogOut=()=>{
-    localStorage.setItem("wazoKey","")
-    navigate('/login')
-  }
+  let handleLogOut = () => {
+    localStorage.setItem("wazoKey", "");
+    navigate("/login");
+  };
 
   return (
     <div className="dashboard">
@@ -106,7 +115,12 @@ export default function Dashboard() {
               {!loading && `${data.getMe.first_name}  ${data.getMe.last_name}`}
             </p>
             <span style={{ fontSize: "80%", padding: "0 5px" }}>&#9660;</span>
-            {loginBtn && <p className="logout-button hover" onClick={handleLogOut}> Log Out</p>}
+            {loginBtn && (
+              <p className="logout-button hover" onClick={handleLogOut}>
+                {" "}
+                Log Out
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -162,6 +176,7 @@ export default function Dashboard() {
                 title="Cancel"
                 onClick={() => {
                   setShowCreate(false);
+                  setShowEdit({ ...showEdit, status: false });
                 }}
               />
               {!showEdit.status && (
