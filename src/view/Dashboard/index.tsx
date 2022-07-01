@@ -18,6 +18,7 @@ import { Context } from "../../context/Context";
 import { ContextType } from "../../@types/context.d";
 
 export default function Dashboard() {
+  // ds
   const { dashboard } = React.useContext(Context) as ContextType;
   let {
     loginBtn,
